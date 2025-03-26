@@ -1,0 +1,14 @@
+{
+  "name": "psst-app",
+  "version": "1.0.0",
+  "description": "Desktop app used to communicate with psst-backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "magicznykacpur",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^35.1.0"
+  }
+}
