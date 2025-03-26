@@ -4,8 +4,8 @@
   "description": "Desktop app used to communicate with psst-backend",
   "main": "main.ts",
   "scripts": {
-    "build": "./node_modules/.bin/tsc",
-    "start": "npm run build && electron ./build/main.js --no-sandbox",
+    "build": "tsc",
+    "start": "npm run build && electron ./dist/main.js --no-sandbox",
     "test": "test"
   },
   "author": "magicznykacpur",
@@ -14,5 +14,10 @@
     "@types/electron": "^1.6.12",
     "electron": "^35.1.0",
     "typescript": "^5.8.2"
+  },
+  "entryPoints": {
+    "preload": {
+      "js": "./src/preload.ts"
+    }
   }
 }
