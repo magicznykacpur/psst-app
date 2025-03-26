@@ -2,13 +2,17 @@
   "name": "psst-app",
   "version": "1.0.0",
   "description": "Desktop app used to communicate with psst-backend",
-  "main": "index.js",
+  "main": "main.ts",
   "scripts": {
+    "build": "./node_modules/.bin/tsc",
+    "start": "npm run build && electron ./build/main.js --no-sandbox",
     "test": "test"
   },
   "author": "magicznykacpur",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^35.1.0"
+    "@types/electron": "^1.6.12",
+    "electron": "^35.1.0",
+    "typescript": "^5.8.2"
   }
 }
