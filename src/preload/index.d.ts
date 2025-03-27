@@ -6,7 +6,7 @@ declare global {
     api: {
       goToSignup: () => void,
       goToLogin: () => void,
-      goToDashboard: () => void
+      goToDashboard: () => void,
     }
   }
 }

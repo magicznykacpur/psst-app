@@ -13,7 +13,8 @@ export default defineConfig({
       rollupOptions: {
         input: {
           login: resolve(__dirname, 'src/renderer/login/index.html'),
-          signup: resolve(__dirname, 'src/renderer/signup/index.html')
+          signup: resolve(__dirname, 'src/renderer/signup/index.html'),
+          dashboard: resolve(__dirname, 'src/renderer/dashboard/index.html')
         }
       }
     }

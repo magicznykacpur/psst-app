@@ -24,6 +24,7 @@ const loginFormSubmitHandler = () => {
         invalidLoginDetailsToast()
       } else {
         succesfullyLoggedInToast()
+        window.api.goToDashboard()
       }
     }
 
