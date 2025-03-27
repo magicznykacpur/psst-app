@@ -1,21 +1,46 @@
+import { Toast } from "bootstrap"
+
 const initLoginRenderer = () => {
   window.addEventListener("DOMContentLoaded", () => {
-    loginFormValidation();
-    signupButtonHandler()
+    loginFormSubmitHandler();
+    signupButtonHandler();
   })
 }
 
-const loginFormValidation = () => {
+const loginFormSubmitHandler = () => {
   const loginForm = document.getElementById("login-form") as HTMLFormElement
 
-  loginForm.addEventListener("submit", event => {
-    if (!loginForm.checkValidity()) {
-      event.preventDefault()
-      event.stopPropagation()
+  loginForm.addEventListener("submit", async event => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (loginForm.checkValidity()) {
+      const email = (document.getElementById("email") as HTMLInputElement).value
+      const password = (document.getElementById("password") as HTMLInputElement).value
+
+      const token = await getJWTToken(email, password)
+
+      if (!token) {
+        invalidLoginDetailsToast()
+      } else {
+        succesfullyLoggedInToast()
+      }
     }
 
     loginForm.classList.add("was-validated")
   })
+}
+
+const succesfullyLoggedInToast = () => {
+  const toast = document.getElementById('login-successful')
+  const toastBootstrap = Toast.getOrCreateInstance(toast)
+  toastBootstrap.show()
+}
+
+const invalidLoginDetailsToast = () => {
+  const toast = document.getElementById('invalid-login-details')
+  const toastBootstrap = Toast.getOrCreateInstance(toast)
+  toastBootstrap.show()
 }
 
 const signupButtonHandler = () => {
@@ -27,6 +52,24 @@ const signupButtonHandler = () => {
 
     window.api.goToSignup()
   })
+}
+
+const apiURL = "http://localhost:42069/api/login"
+
+const getJWTToken = async (email: string, password: string) => {
+  try {
+    const response = await fetch(apiURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ "email": email, "password": password })
+    })
+
+    const data = await response.json()
+    return data.token
+  } catch (error) {
+    console.error(error)
+  }
+
 }
 
 initLoginRenderer()

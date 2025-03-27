@@ -5,11 +5,13 @@ import { ipcRenderer } from 'electron/renderer'
 type Api = {
   goToSignup: () => void,
   goToLogin: () => void,
+  goToDashboard: () => void,
 }
 
 const api: Api = {
   goToSignup: () => ipcRenderer.send("go-to-signup"),
   goToLogin: () => ipcRenderer.send("go-to-login"),
+  goToDashboard: () => ipcRenderer.send("go-to-dashboard"),
 }
 
 if (process.contextIsolated) {

@@ -4,7 +4,8 @@ const electron = require("electron");
 const renderer = require("electron/renderer");
 const api = {
   goToSignup: () => renderer.ipcRenderer.send("go-to-signup"),
-  goToLogin: () => renderer.ipcRenderer.send("go-to-login")
+  goToLogin: () => renderer.ipcRenderer.send("go-to-login"),
+  goToDashboard: () => renderer.ipcRenderer.send("go-to-dashboard")
 };
 if (process.contextIsolated) {
   try {
