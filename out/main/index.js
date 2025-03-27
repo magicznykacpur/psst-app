@@ -15,6 +15,9 @@ function createWindow() {
       sandbox: false
     }
   });
+  electron.ipcMain.on("go-to-submit", () => {
+    mainWindow.loadFile(path.join(__dirname, "../../src/renderer/signup.html"));
+  });
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
   });
@@ -33,7 +36,6 @@ electron.app.whenReady().then(() => {
   electron.app.on("browser-window-created", (_, window) => {
     utils.optimizer.watchWindowShortcuts(window);
   });
-  electron.ipcMain.on("ping", () => console.log("pong"));
   createWindow();
   electron.app.on("activate", function() {
     if (electron.BrowserWindow.getAllWindows().length === 0) createWindow();

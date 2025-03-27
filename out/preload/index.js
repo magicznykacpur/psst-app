@@ -1,7 +1,10 @@
 "use strict";
-const electron = require("electron");
 const preload = require("@electron-toolkit/preload");
-const api = {};
+const electron = require("electron");
+const renderer = require("electron/renderer");
+const api = {
+  goToSubmit: () => renderer.ipcRenderer.send("go-to-submit")
+};
 if (process.contextIsolated) {
   try {
     electron.contextBridge.exposeInMainWorld("electron", preload.electronAPI);

@@ -1,26 +1,34 @@
-function init(): void {
-  window.addEventListener('DOMContentLoaded', () => {
-    doAThing()
+const init = () => {
+  window.addEventListener("DOMContentLoaded", () => {
+    loginFormValidation();
+    signupButtonHandler();
+  });
+}
+
+const signupButtonHandler = () => {
+  const signupButton = document.getElementById("signup-button") as HTMLButtonElement
+
+  signupButton.addEventListener("click", () => {
+    window.api.goToSubmit()
   })
 }
 
-function doAThing(): void {
-  const versions = window.electron.process.versions
-  replaceText('.electron-version', `Electron v${versions.electron}`)
-  replaceText('.chrome-version', `Chromium v${versions.chrome}`)
-  replaceText('.node-version', `Node v${versions.node}`)
+const loginFormValidation = () => {
+  const form = document.getElementById("login-form") as HTMLFormElement;
 
-  const ipcHandlerBtn = document.getElementById('ipcHandler')
-  ipcHandlerBtn?.addEventListener('click', () => {
-    window.electron.ipcRenderer.send('ping')
+  form?.addEventListener("submit", event => {
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    form.classList.add('was-validated')
+
+    const email: string | null = (document.getElementById("email") as HTMLInputElement)?.value;
+    const password: string | null = (document.getElementById("password") as HTMLInputElement)?.value;
+
+    console.log(`emai: ${email}, password ${password}`);
   })
 }
 
-function replaceText(selector: string, text: string): void {
-  const element = document.querySelector<HTMLElement>(selector)
-  if (element) {
-    element.innerText = text
-  }
-}
-
-init()
+init();

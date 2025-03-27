@@ -14,9 +14,14 @@
     <div class="app-title">psst</div>
     <div class="app-description mb-5">a simple communicator</div>
 
-    <form id="login-form" class="login-form needs-validation" novalidate>
+    <form id="signup-form" class="login-form needs-validation" novalidate>
       <div class="input-group mb-3 has-validation">
         <input type="text" required class="form-control bg-dark text-white" id="email" placeholder="email"/>
+        <div class="invalid-feedback">field is required</div>
+      </div>
+
+      <div class="input-group mb-3 has-validation">
+        <input type="text" required class="form-control bg-dark text-white" id="username" placeholder="username"/>
         <div class="invalid-feedback">field is required</div>
       </div>
 
@@ -26,12 +31,11 @@
       </div>
 
       <div class="login-button-holder">
-        <button id="login-button" type="submit" class="btn btn-outline-light">Login</button>
-        <button id="signup-button" type="button" class="btn btn-outline-light ms-2">Sign up</button>
+        <button id="login-button" type="submit" class="btn btn-outline-light">Create account</button>
       </div>
     </form>
 
-    <script type="module" src="./src/renderer.ts"></script>
+    <!-- <script type="module" src="./src/renderer.ts"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"></script>
