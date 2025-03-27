@@ -1,0 +1,30 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 40%;
+}
+
+.signup-form {
+    width: 100%;
+}
+
+#email::placeholder {
+    color: gray;
+}
+
+#username::placeholder {
+    color: gray;
+}
+
+#password::placeholder {
+    color: gray;
+}

@@ -1,7 +1,6 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -9,15 +8,18 @@ function createWindow(): void {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     }
   })
 
-  ipcMain.on("go-to-submit", () => {
-    mainWindow.loadFile(join(__dirname, '../../src/renderer/signup.html'))
+  ipcMain.on("go-to-signup", () => {
+    mainWindow.loadFile(join(__dirname, '../../out/renderer/signup/index.html'))
+  })
+
+  ipcMain.on("go-to-login", () => {
+    mainWindow.loadFile(join(__dirname, '../../out/renderer/login/index.html'))
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -29,11 +31,7 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-  }
+  mainWindow.loadFile(join(__dirname, "../../out/renderer/login/index.html"))
 }
 
 app.whenReady().then(() => {

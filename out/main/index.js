@@ -1,22 +1,23 @@
 "use strict";
+const utils = require("@electron-toolkit/utils");
 const electron = require("electron");
 const path = require("path");
-const utils = require("@electron-toolkit/utils");
-const icon = path.join(__dirname, "../../resources/icon.png");
 function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 900,
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...process.platform === "linux" ? { icon } : {},
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
       sandbox: false
     }
   });
-  electron.ipcMain.on("go-to-submit", () => {
-    mainWindow.loadFile(path.join(__dirname, "../../src/renderer/signup.html"));
+  electron.ipcMain.on("go-to-signup", () => {
+    mainWindow.loadFile(path.join(__dirname, "../../out/renderer/signup/index.html"));
+  });
+  electron.ipcMain.on("go-to-login", () => {
+    mainWindow.loadFile(path.join(__dirname, "../../out/renderer/login/index.html"));
   });
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
@@ -25,11 +26,7 @@ function createWindow() {
     electron.shell.openExternal(details.url);
     return { action: "deny" };
   });
-  if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
-  }
+  mainWindow.loadFile(path.join(__dirname, "../../out/renderer/login/index.html"));
 }
 electron.app.whenReady().then(() => {
   utils.electronApp.setAppUserModelId("com.electron");

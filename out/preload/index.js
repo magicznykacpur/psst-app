@@ -3,7 +3,8 @@ const preload = require("@electron-toolkit/preload");
 const electron = require("electron");
 const renderer = require("electron/renderer");
 const api = {
-  goToSubmit: () => renderer.ipcRenderer.send("go-to-submit")
+  goToSignup: () => renderer.ipcRenderer.send("go-to-signup"),
+  goToLogin: () => renderer.ipcRenderer.send("go-to-login")
 };
 if (process.contextIsolated) {
   try {

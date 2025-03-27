@@ -2,8 +2,14 @@ import { electronAPI } from '@electron-toolkit/preload'
 import { contextBridge } from 'electron'
 import { ipcRenderer } from 'electron/renderer'
 
-const api: { goToSubmit: () => void } = {
-  goToSubmit: () => ipcRenderer.send("go-to-submit")
+type Api = {
+  goToSignup: () => void,
+  goToLogin: () => void,
+}
+
+const api: Api = {
+  goToSignup: () => ipcRenderer.send("go-to-signup"),
+  goToLogin: () => ipcRenderer.send("go-to-login"),
 }
 
 if (process.contextIsolated) {
