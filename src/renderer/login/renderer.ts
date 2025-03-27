@@ -69,7 +69,6 @@ const getJWTToken = async (email: string, password: string) => {
   } catch (error) {
     console.error(error)
   }
-
 }
 
 initLoginRenderer()
