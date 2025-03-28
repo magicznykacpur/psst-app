@@ -1,24 +1,18 @@
-import * as fs from "fs"
-import * as os from "os"
 import { electronApp, optimizer } from "@electron-toolkit/utils"
-import { app, BrowserWindow, ipcMain, shell } from "electron"
-import { join } from "path"
 import { config } from "dotenv"
+import { app, BrowserWindow, ipcMain, shell } from "electron"
+import { promises } from "fs"
+import { homedir } from "os"
+import { join } from "path"
 
 config()
 
-const loadUserConfig = async (): Promise<string | void> => {
-  const home = os.homedir()
-  const path = `${home}/.psst.config.json`
+const loadUserToken = async (): Promise<string> => {
+  const configPath = `${homedir()}/.psst.config.json`
 
-  await fs.readFile(path, "utf-8", (err, data) => {
-    if (err) {
-      console.error(err)
-      return
-    }
+  const file = await promises.readFile(configPath, "utf-8")
 
-    return data.split("\n")[1].trim().split(" ")[1].replaceAll("\"", "")
-  })
+  return file.split(":")[1].replaceAll("}", "").replaceAll("\"", "")
 }
 
 const checkTokenValidity = async (tokenString): Promise<boolean> => {
@@ -30,7 +24,18 @@ const checkTokenValidity = async (tokenString): Promise<boolean> => {
   return response.status === 200
 }
 
-const createWindow = async () => {
+const saveUserToken = async (token: string): Promise<void> => {
+  const configPath = `${homedir()}/.psst.config.json`
+  const stringifiedConfig = JSON.stringify({ "token": token })
+
+  try {
+    await promises.writeFile(configPath, stringifiedConfig)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const createWindow = (tokenValid: boolean) => {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -42,16 +47,25 @@ const createWindow = async () => {
     }
   })
 
+  const outPath = "../../out/renderer"
+  const signupPath = `${outPath}/signup/index.html`
+  const loginPath = `${outPath}/login/index.html`
+  const dashboardPath = `${outPath}/dashboard/index.html`
+
   ipcMain.on("go-to-signup", () => {
-    mainWindow.loadFile(join(__dirname, "../../out/renderer/signup/index.html"))
+    mainWindow.loadFile(join(__dirname, signupPath))
   })
 
   ipcMain.on("go-to-login", () => {
-    mainWindow.loadFile(join(__dirname, "../../out/renderer/login/index.html"))
+    mainWindow.loadFile(join(__dirname, loginPath))
   })
 
   ipcMain.on("go-to-dashboard", () => {
-    mainWindow.loadFile(join(__dirname, "../../out/renderer/dashboard/index.html"))
+    mainWindow.loadFile(join(__dirname, dashboardPath))
+  })
+
+  ipcMain.on("save-user-token", async (_, token) => {
+    await saveUserToken(token)
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -63,21 +77,27 @@ const createWindow = async () => {
     return { action: 'deny' }
   })
 
-  mainWindow.loadFile(join(__dirname, "../../out/renderer/login/index.html"))
+  const mainWindowScreen = tokenValid ? dashboardPath : loginPath
+  mainWindow.loadFile(join(__dirname, mainWindowScreen))
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.electron')
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  createWindow().then(() => {
-    app.on('activate', function () {
-      if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
-  })
+  const tokenString = await loadUserToken()
+  const tokenValidity = await checkTokenValidity(tokenString)
+
+  createWindow(tokenValidity)
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow(tokenValidity)
+  }
+
+  )
 })
 
 app.on('window-all-closed', () => {

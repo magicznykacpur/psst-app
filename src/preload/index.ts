@@ -1,23 +1,26 @@
-import { electronAPI } from '@electron-toolkit/preload'
-import { contextBridge } from 'electron'
-import { ipcRenderer } from 'electron/renderer'
+import { electronAPI } from "@electron-toolkit/preload"
+import { contextBridge } from "electron"
+import { ipcRenderer } from "electron/renderer"
 
 type Api = {
   goToSignup: () => void,
   goToLogin: () => void,
   goToDashboard: () => void,
+  saveUserToken: (token: string) => void,
 }
 
 const api: Api = {
   goToSignup: () => ipcRenderer.send("go-to-signup"),
   goToLogin: () => ipcRenderer.send("go-to-login"),
   goToDashboard: () => ipcRenderer.send("go-to-dashboard"),
+  saveUserToken: (token: string) => ipcRenderer.send("save-user-token", token),
 }
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld("electron", electronAPI)
+    contextBridge.exposeInMainWorld("api", api)
+    contextBridge.exposeInMainWorld("api_url", process.env["API_URL"])
   } catch (error) {
     console.error(error)
   }
@@ -26,4 +29,6 @@ if (process.contextIsolated) {
   window.electron = electronAPI
   // @ts-ignore (define in dts)
   window.api = api
+  // @ts-ignore (define in dts)
+  window.api_url = process.env["API_URL"]
 }

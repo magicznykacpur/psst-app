@@ -7,6 +7,8 @@ declare global {
       goToSignup: () => void,
       goToLogin: () => void,
       goToDashboard: () => void,
+      saveUserToken: (token: string) => void,
     }
+    api_url: string
   }
 }
