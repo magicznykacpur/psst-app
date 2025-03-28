@@ -68,27 +68,31 @@ const initHeaderDropdownListener = () => {
 
   headerDropdownButton.addEventListener("click", () => {
     if (headerDropdownButton.classList.contains("show")) {
-      hideHeaderDropdown()
+      toggleHeaderDropdown("hide")
     } else {
-      showHeaderDropdown()
+      toggleHeaderDropdown("show")
+    }
+  })
+
+  const dropdownMenu = document.getElementById("header-dropdown-menu") as HTMLUListElement
+  document.addEventListener("click", (event: MouseEvent) => {
+    if ((event.target as HTMLElement).contains(dropdownMenu)) {
+      toggleHeaderDropdown("hide")
     }
   })
 }
 
-const hideHeaderDropdown = () => {
+const toggleHeaderDropdown = (toggle: "show" | "hide") => {
   const dropdownButton = document.getElementById("header-dropdown-button") as HTMLButtonElement
   const dropdownMenu = document.getElementById("header-dropdown-menu") as HTMLUListElement
 
-  dropdownButton.classList.remove("show")
-  dropdownMenu.classList.remove("show")
-}
-
-const showHeaderDropdown = () => {
-  const dropdownButton = document.getElementById("header-dropdown-button") as HTMLButtonElement
-  const dropdownMenu = document.getElementById("header-dropdown-menu") as HTMLUListElement
-
-  dropdownButton.classList.add("show")
-  dropdownMenu.classList.add("show")
+  if (toggle === "show") {
+    dropdownButton.classList.add("show")
+    dropdownMenu.classList.add("show")
+  } else {
+    dropdownButton.classList.remove("show")
+    dropdownMenu.classList.remove("show")
+  }
 }
 
 const promptToast = (message: string) => {
