@@ -1,26 +1,26 @@
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 40%;
 }
 
 .login-form {
-    width: 100%;
+  width: 100%;
 }
 
 #email::placeholder {
-    color: gray;
+  color: gray;
 }
 
 #password::placeholder {
-    color: gray;
+  color: gray;
 }
