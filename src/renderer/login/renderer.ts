@@ -1,7 +1,10 @@
 import { Toast } from "bootstrap"
+import * as fs from "fs"
+import * as os from "os"
 
 const initLoginRenderer = () => {
-  window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("DOMContentLoaded", async () => {
+    await redirectUserIfLoggedIn();
     loginFormSubmitHandler();
     signupButtonHandler();
   })
@@ -55,11 +58,11 @@ const signupButtonHandler = () => {
   })
 }
 
-const apiURL = "http://localhost:42069/api/login"
+const apiURL = "http://localhost:42069/api"
 
 const getJWTToken = async (email: string, password: string) => {
   try {
-    const response = await fetch(apiURL, {
+    const response = await fetch(`${apiURL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ "email": email, "password": password })
@@ -70,6 +73,36 @@ const getJWTToken = async (email: string, password: string) => {
   } catch (error) {
     console.error(error)
   }
+}
+
+const redirectUserIfLoggedIn = async () => {
+  const tokenString = await loadUserConfig()
+  const tokenValid = await checkTokenValidity(tokenString)
+
+  tokenValid && console.log("redirecting to dashboard")
+}
+
+const loadUserConfig = async (): Promise<string | void> => {
+  const home = os.homedir()
+  const path = `${home}/.psst.config.json`
+
+  await fs.readFile(path, "utf-8", (err, data) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+
+    return data.split("\n")[1].trim().split(" ")[1].replaceAll("\"", "")
+  })
+}
+
+const checkTokenValidity = async (tokenString): Promise<boolean> => {
+  const response = await fetch(`${apiURL}/validity`, {
+    method: "POST",
+    body: JSON.stringify({ "token": tokenString })
+  })
+
+  return response.status === 200
 }
 
 initLoginRenderer()

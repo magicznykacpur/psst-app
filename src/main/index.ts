@@ -1,9 +1,11 @@
-import { electronApp, optimizer } from '@electron-toolkit/utils'
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import * as fs from "fs"
 import * as os from "os"
-import { join } from 'path'
+import { electronApp, optimizer } from "@electron-toolkit/utils"
+import { app, BrowserWindow, ipcMain, shell } from "electron"
+import { join } from "path"
+import { config } from "dotenv"
 
+config()
 
 const loadUserConfig = async (): Promise<string | void> => {
   const home = os.homedir()
@@ -19,10 +21,8 @@ const loadUserConfig = async (): Promise<string | void> => {
   })
 }
 
-const apiURL = "http://localhost:42069/api/validity"
-
 const checkTokenValidity = async (tokenString): Promise<boolean> => {
-  const response = await fetch(apiURL, {
+  const response = await fetch(`${process.env.API_URL}/validity`, {
     method: "POST",
     body: JSON.stringify({ "token": tokenString })
   })
@@ -30,7 +30,7 @@ const checkTokenValidity = async (tokenString): Promise<boolean> => {
   return response.status === 200
 }
 
-const createWindow = (tokenValid: boolean) => {
+const createWindow = async () => {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -63,26 +63,20 @@ const createWindow = (tokenValid: boolean) => {
     return { action: 'deny' }
   })
 
-  if (tokenValid) {
-    mainWindow.loadFile(join(__dirname, "../../out/renderer/dashboard/index.html"))
-  } else {
-    mainWindow.loadFile(join(__dirname, "../../out/renderer/login/index.html"))
-  }
+  mainWindow.loadFile(join(__dirname, "../../out/renderer/login/index.html"))
 }
 
-app.whenReady().then(async () => {
+app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  const tokenString = await loadUserConfig()
-  console.log(tokenString)
-  createWindow(false)
-
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow(false)
+  createWindow().then(() => {
+    app.on('activate', function () {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    })
   })
 })
 
