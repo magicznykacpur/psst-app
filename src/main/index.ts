@@ -71,8 +71,8 @@ const createWindow = (tokenValid: boolean) => {
     mainWindow.loadFile(join(__dirname, loginPath))
   })
 
-  ipcMain.on("go-to-dashboard", () => {
-    mainWindow.loadFile(join(__dirname, dashboardPath))
+  ipcMain.on("go-to-dashboard", (_, token) => {
+    mainWindow.loadFile(join(__dirname, dashboardPath), {query: {"user-token": token}})
   })
 
   ipcMain.on("save-user-token", async (_, token) => {

@@ -12,21 +12,25 @@ type User = { id: string, createdAt: string, updatedAt: string, username: string
 let user: User = null
 
 const getUser = async () => {
+  const paramToken = new URLSearchParams(window.location.search).get("user-token")
+  const userToken = paramToken === null ? window.user_token : paramToken
+
   try {
     const response = await fetch(`${window.api_url}/users/me`,
       {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${window.user_token}`
+          "Authorization": `Bearer ${userToken}`
         }
-      })
+      }
+    )
 
     const body = await response.json()
 
     user = {
       id: body.id,
-      createdAt: body.createdAt,
-      updatedAt: body.updatedAt,
+      createdAt: body.created_at,
+      updatedAt: body.updated_at,
       username: body.username,
       email: body.email
     }

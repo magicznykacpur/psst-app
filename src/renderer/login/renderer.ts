@@ -24,7 +24,7 @@ const loginFormSubmitHandler = () => {
         invalidLoginDetailsToast()
       } else {
         window.api.saveUserToken(token)
-        window.api.goToDashboard()
+        window.api.goToDashboard(token)
       }
     }
 

@@ -5,7 +5,7 @@ import { ipcRenderer } from "electron/renderer"
 type Api = {
   goToSignup: () => void,
   goToLogin: () => void,
-  goToDashboard: () => void,
+  goToDashboard: (token: string) => void,
   saveUserToken: (token: string) => void,
   signOutUser: () => void
 }
@@ -13,7 +13,7 @@ type Api = {
 const api: Api = {
   goToSignup: () => ipcRenderer.send("go-to-signup"),
   goToLogin: () => ipcRenderer.send("go-to-login"),
-  goToDashboard: () => ipcRenderer.send("go-to-dashboard"),
+  goToDashboard: (token: string) => ipcRenderer.send("go-to-dashboard", token),
   saveUserToken: (token: string) => ipcRenderer.send("save-user-token", token),
   signOutUser: () => ipcRenderer.send("sign-out-user")
 }

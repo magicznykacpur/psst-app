@@ -17,6 +17,10 @@ body {
     padding: 1rem;
 }
 
+#header-dropdown-button:hover {
+    transform: scale(1.1);
+}
+
 .sidebar {
     position: fixed;
     left: 0;
