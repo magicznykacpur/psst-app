@@ -14,6 +14,11 @@
 
     <header class="dashboard-header">
       <h5 class="text-white">psst</h5>
+      <div class="user">
+        <div id="user-loader" class="spinner-border spinner-border-sm text-light" role="status"></div>
+        <small id="user-name" class="text-white"></small>
+        
+      </div>
     </header>
     
     <div class="sidebar">
@@ -25,30 +30,27 @@
     </div>
 
     <div class="current-chat"></div>
-
-    <!-- <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="login-successful" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">psst</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          successfully logged in
-        </div>
-      </div>
+    <div class="dropdown">
+      <button id="header-dropdown" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Dropdown button
+      </button>
+      <ul id="header-dropdown-menu" class="dropdown-menu">
+        <li><a class="dropdown-item text-white" href="#">Action</a></li>
+        <li><a class="dropdown-item text-white" href="#">Another action</a></li>
+        <li><a class="dropdown-item text-white" href="#">Something else here</a></li>
+      </ul>
     </div>
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="invalid-login-details" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="dashboard-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
           <strong class="me-auto">psst</strong>
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body">
-          invalid email or password
-        </div>
+        <div id="dashboard-toast-body"></div>
       </div>
-    </div> -->
+    </div>
+
 
     <script type="module" src="renderer.ts"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

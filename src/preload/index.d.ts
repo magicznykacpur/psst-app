@@ -9,6 +9,7 @@ declare global {
       goToDashboard: () => void,
       saveUserToken: (token: string) => void,
     }
-    api_url: string
+    api_url: string,
+    user_token: string
   }
 }

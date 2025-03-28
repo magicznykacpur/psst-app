@@ -47,7 +47,7 @@ const accountCreationErrorToast = () => {
 
 const apiURL = "http://localhost:42069/api/users"
 
-const createUser = async (email: string, username: string, password: string) => {
+const createUser = async (email: string, username: string, password: string): Promise<number | void> => {
   try {
     const response = await fetch(apiURL, {
       method: "POST",

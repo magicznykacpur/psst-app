@@ -90,6 +90,7 @@ app.whenReady().then(async () => {
 
   const tokenString = await loadUserToken()
   const tokenValidity = await checkTokenValidity(tokenString)
+  process.env.USER_TOKEN = tokenString
 
   createWindow(tokenValidity)
 
