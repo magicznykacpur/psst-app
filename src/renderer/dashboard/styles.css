@@ -22,3 +22,21 @@ body {
     left: 0;
     top: 4rem;
 }
+
+.dropdown-menu {
+    position: fixed;
+    right: 1rem;
+
+    :hover {
+        background-color: transparent;
+    }
+}
+
+.dropdown-item {
+    text-align: center;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(68, 68, 68, 0.3);
+    cursor: pointer;
+}

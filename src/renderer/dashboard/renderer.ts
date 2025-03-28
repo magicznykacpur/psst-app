@@ -3,6 +3,8 @@ import { Toast } from "bootstrap";
 const initDashboardRenderer = () => {
   window.addEventListener("DOMContentLoaded", async () => {
     await getUser();
+    initHeaderDropdownListener();
+    initSignoutUser()
   })
 }
 
@@ -20,7 +22,7 @@ const getUser = async () => {
       })
 
     const body = await response.json()
-    
+
     user = {
       id: body.id,
       createdAt: body.createdAt,
@@ -37,11 +39,17 @@ const getUser = async () => {
   }
 }
 
+const initSignoutUser = () => {
+  const signOutButton = document.getElementById("sign-out") as HTMLDivElement
+
+  signOutButton.addEventListener("click", () => {
+    window.api.signOutUser()
+  })
+}
+
 const setUserLoaderHidden = () => {
-  const userLoader = document.getElementById("user-loader")
-  if (userLoader) {
-    userLoader.classList.add("visually-hidden")
-  }
+  const userLoader = document.getElementById("user-loader") as HTMLDivElement
+  userLoader.classList.add("visually-hidden")
 }
 
 const setUsername = () => {
@@ -49,6 +57,34 @@ const setUsername = () => {
   if (userName && user?.username) {
     userName.innerText = user?.username
   }
+}
+
+const initHeaderDropdownListener = () => {
+  const headerDropdownButton = document.getElementById("header-dropdown-button") as HTMLButtonElement
+
+  headerDropdownButton.addEventListener("click", () => {
+    if (headerDropdownButton.classList.contains("show")) {
+      hideHeaderDropdown()
+    } else {
+      showHeaderDropdown()
+    }
+  })
+}
+
+const hideHeaderDropdown = () => {
+  const dropdownButton = document.getElementById("header-dropdown-button") as HTMLButtonElement
+  const dropdownMenu = document.getElementById("header-dropdown-menu") as HTMLUListElement
+
+  dropdownButton.classList.remove("show")
+  dropdownMenu.classList.remove("show")
+}
+
+const showHeaderDropdown = () => {
+  const dropdownButton = document.getElementById("header-dropdown-button") as HTMLButtonElement
+  const dropdownMenu = document.getElementById("header-dropdown-menu") as HTMLUListElement
+
+  dropdownButton.classList.add("show")
+  dropdownMenu.classList.add("show")
 }
 
 const promptToast = (message: string) => {

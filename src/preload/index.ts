@@ -7,6 +7,7 @@ type Api = {
   goToLogin: () => void,
   goToDashboard: () => void,
   saveUserToken: (token: string) => void,
+  signOutUser: () => void
 }
 
 const api: Api = {
@@ -14,6 +15,7 @@ const api: Api = {
   goToLogin: () => ipcRenderer.send("go-to-login"),
   goToDashboard: () => ipcRenderer.send("go-to-dashboard"),
   saveUserToken: (token: string) => ipcRenderer.send("save-user-token", token),
+  signOutUser: () => ipcRenderer.send("sign-out-user")
 }
 
 if (process.contextIsolated) {

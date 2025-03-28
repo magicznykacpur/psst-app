@@ -35,6 +35,17 @@ const saveUserToken = async (token: string): Promise<void> => {
   }
 }
 
+const clearUserToken = async (): Promise<void> => {
+  const configPath = `${homedir()}/.psst.config.json`
+  const stringifiedConfig = JSON.stringify({ "token": "" })
+
+  try {
+    await promises.writeFile(configPath, stringifiedConfig)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const createWindow = (tokenValid: boolean) => {
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -66,6 +77,11 @@ const createWindow = (tokenValid: boolean) => {
 
   ipcMain.on("save-user-token", async (_, token) => {
     await saveUserToken(token)
+  })
+
+  ipcMain.on("sign-out-user", async () => {
+    await clearUserToken()
+    mainWindow.loadFile(join(__dirname, loginPath))
   })
 
   mainWindow.on('ready-to-show', () => {
