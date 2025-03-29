@@ -46,29 +46,23 @@
       <div class="d-flex">
         <div class="sidebar">
           <div
-            class="new-chat bg-dark d-flex justify-content-center align-items-center"
+            class="new-chat d-flex justify-content-center align-items-center"
           >
             <button
               id="new-chat-button"
-              class="btn btn-ouline-light text-white"
+              class="btn text-white mt-2"
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
             >
               <img
                 src="./assets/add.svg"
-                width="32"
-                height="32"
-                class="me-3"
+                width="24"
+                height="24"
+                class=""
               />new chat
             </button>
           </div>
-          <div class="chats text-white">
-            <div
-              class="chat-item d-flex justify-content-center align-items-center"
-            >
-              <div class="chat-with">john smith</div>
-            </div>
-          </div>
+          <div id="chats" class="chats text-white"></div>
         </div>
 
         <div class="current-chat d-flex"></div>
@@ -117,7 +111,9 @@
               >
                 Close
               </button>
-              <button type="button" class="btn btn-outline-light">Start chat</button>
+              <button type="button" class="btn btn-outline-light">
+                Start chat
+              </button>
             </div>
           </div>
         </div>

@@ -39,13 +39,19 @@ body {
   overflow: auto;
   scrollbar-width: thin;
   max-height: 80%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-item {
-  width: 100%;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  background-color: rgba(68, 68, 68, 0.5)
+  width: 90%;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(68, 68, 68, 0.5);
 }
 
 .chat-item:hover {
@@ -55,6 +61,12 @@ body {
 
 .new-chat {
   padding: 0.5rem;
+}
+
+#new-chat-button:hover {
+  transform: scale(1.05);
+  background-color: rgba(68, 68, 68, 0.25);
+
 }
 
 .dropdown-menu {
@@ -76,7 +88,7 @@ body {
 }
 
 .modal-footer {
-  border: none
+  border: none;
 }
 
 #modal-username::placeholder {
