@@ -45,60 +45,82 @@
 
       <div class="d-flex">
         <div class="sidebar">
-          <div class="chats text-white">
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            <div class="chat-item d-flex align-items-center">
-              <img src="./assets/face.svg" width="24" height="24" />
-              <div class="last-message">some words from last message</div>
-            </div>
-            
+          <div
+            class="new-chat bg-dark d-flex justify-content-center align-items-center"
+          >
+            <button
+              id="new-chat-button"
+              class="btn btn-ouline-light text-white"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              <img
+                src="./assets/add.svg"
+                width="32"
+                height="32"
+                class="me-3"
+              />new chat
+            </button>
           </div>
-          <div class="new-chat bg-dark d-flex justify-content-start align-items-center">
-            <img src="./assets/add.svg" width="32" height="32" class="me-3" />
-            <strong class="text-white">new chat</strong>
+          <div class="chats text-white">
+            <div
+              class="chat-item d-flex justify-content-center align-items-center"
+            >
+              <div class="chat-with">john smith</div>
+            </div>
           </div>
         </div>
 
-        <div class="current-chat"></div>
+        <div class="current-chat d-flex"></div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content bg-dark text-white">
+            <div class="modal-header d-flex justify-content-between">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Start new chat
+              </h1>
+              <div data-bs-theme="dark">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+            </div>
+            <div class="modal-body">
+              <h6 class="mb-3">Type in the username you want to chat with</h6>
+              <div class="input-group mb-4 has-validation">
+                <input
+                  type="text"
+                  required
+                  class="form-control bg-dark text-white"
+                  id="modal-username"
+                  placeholder="username"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-light"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-outline-light">Start chat</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="toast-container position-fixed bottom-0 end-0 p-3">

@@ -29,9 +29,9 @@ body {
   width: 30%;
   height: 100%;
   border-right: 2px solid black;
-  border-bottom: 1px solid red;
 
   display: flex;
+  flex-direction: column;
 }
 
 .chats {
@@ -45,8 +45,7 @@ body {
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  justify-content: space-between;
-  text-overflow: ellipsis;
+  background-color: rgba(68, 68, 68, 0.5)
 }
 
 .chat-item:hover {
@@ -55,18 +54,7 @@ body {
 }
 
 .new-chat {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 30%;
   padding: 0.5rem;
-  border-top: 2px solid black;
-  border-right: 2px solid black;
-}
-
-.new-chat:hover {
-  background-color: white;
-  cursor: pointer;
 }
 
 .dropdown-menu {
@@ -81,4 +69,16 @@ body {
 .dropdown-item:hover {
   background-color: rgba(68, 68, 68, 0.3);
   cursor: pointer;
+}
+
+.modal-header {
+  border: none;
+}
+
+.modal-footer {
+  border: none
+}
+
+#modal-username::placeholder {
+  color: gray;
 }
