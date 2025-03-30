@@ -6,6 +6,10 @@ body {
   width: 100vw;
 }
 
+textarea {
+  resize: none;
+}
+
 .dashboard {
   width: 100%;
   height: 100%;
@@ -14,6 +18,7 @@ body {
 .dashboard-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem;
   border-bottom: 2px solid black;
 }
@@ -22,12 +27,23 @@ body {
   transform: scale(1.1);
 }
 
-.sidebar {
+.dropdown-menu {
   position: fixed;
-  left: 0;
-  top: 4rem;
+  right: 1rem;
+}
+
+.dropdown-item {
+  text-align: center;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(68, 68, 68, 0.3);
+  cursor: pointer;
+}
+
+.sidebar {
   width: 30%;
-  height: 100%;
+  height: calc(100vh - 66px);
   border-right: 2px solid black;
 
   display: flex;
@@ -46,12 +62,40 @@ body {
 
 .chat-item {
   width: 90%;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
   border-radius: 0.5rem;
   background-color: rgba(68, 68, 68, 0.5);
+}
+
+#messages {
+  height: 490px;
+  overflow-y: scroll;
+
+  scrollbar-color: rgba(68, 68, 68, 0.5) rgba(68, 68, 68, 0.15);
+  scrollbar-width: thin;
+}
+
+.no-messages {
+  justify-self: center;
+  align-self: center;
+  color: gray;
+  font-size: 1rem;
+}
+
+#message-input-holder {
+  margin-top: auto;
+}
+
+#message-input {
+  box-shadow: none;
+  outline: none;
+}
+
+#message-input::placeholder {
+  color: gray;
 }
 
 .chat-item:hover {
@@ -66,21 +110,29 @@ body {
 #new-chat-button:hover {
   transform: scale(1.05);
   background-color: rgba(68, 68, 68, 0.25);
-
 }
 
-.dropdown-menu {
-  position: fixed;
-  right: 1rem;
+.current-chat {
+  width: 70%;
+  flex-direction: column;
 }
 
-.dropdown-item {
-  text-align: center;
+.my-message {
+  justify-self: flex-end;
+  padding: 1rem;
+  background-color: rgba(68, 68, 68, 0.5);
+  margin: 0.75rem;
+  width: 60%;
+  border-radius: 1.5rem;
 }
 
-.dropdown-item:hover {
-  background-color: rgba(68, 68, 68, 0.3);
-  cursor: pointer;
+.receiver-message {
+  justify-self: flex-start;
+  padding: 1rem;
+  background-color: rgba(122, 122, 122, 0.5);
+  margin: 0.75rem;
+  width: 60%;
+  border-radius: 1.5rem;
 }
 
 .modal-header {

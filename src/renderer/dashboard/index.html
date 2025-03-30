@@ -54,18 +54,25 @@
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
             >
-              <img
-                src="./assets/add.svg"
-                width="24"
-                height="24"
-                class=""
-              />new chat
+              <img src="./assets/add.svg" width="24" height="24" class="" />new
+              chat
             </button>
           </div>
           <div id="chats" class="chats text-white"></div>
         </div>
 
-        <div class="current-chat d-flex"></div>
+        <div id="current-chat" class="current-chat d-flex text-white">
+          <div id="messages"></div>
+          <div id="message-input-holder">
+            <textarea
+              id="message-input"
+              class="form-control bg-black text-white border-black"
+              rows="4"
+              aria-label="With textarea"
+              placeholder="start typing your message..."
+            ></textarea>
+          </div>
+        </div>
       </div>
 
       <!-- Modal -->
