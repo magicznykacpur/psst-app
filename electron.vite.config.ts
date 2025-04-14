@@ -1,22 +1,22 @@
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
-import { resolve } from 'path'
+import { defineConfig, externalizeDepsPlugin } from "electron-vite";
+import { resolve } from "path";
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
   },
   renderer: {
     build: {
       rollupOptions: {
         input: {
-          login: resolve(__dirname, 'src/renderer/login/index.html'),
-          signup: resolve(__dirname, 'src/renderer/signup/index.html'),
-          dashboard: resolve(__dirname, 'src/renderer/dashboard/index.html')
-        }
-      }
-    }
-  }
-})
+          login: resolve(__dirname, "src/renderer/login/index.html"),
+          signup: resolve(__dirname, "src/renderer/signup/index.html"),
+          dashboard: resolve(__dirname, "src/renderer/dashboard/index.html"),
+        },
+      },
+    },
+  },
+});
