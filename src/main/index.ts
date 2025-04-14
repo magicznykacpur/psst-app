@@ -95,11 +95,17 @@ const createWindow = (tokenValid: boolean) => {
     loadBasedOnEnv(mainWindow, loginPath)
   });
 
-  ipcMain.on("request-with-body", async (_, url, options) => {
-    const response = await fetch(url, options);
-    const body = await response.json();
-
-    return body;
+  ipcMain.handle("request-with-body", async (_, url: string, options: RequestInit) => {
+    try {
+      const response = await fetch(url, options);
+      
+      if (!["POST", "PUT", "DELETE"].includes(options.method ?? "") ) {
+        const body = await response.json();
+        return body
+      }
+    } catch (e) {
+      console.error(e)
+    }
   });
 
   mainWindow.on("ready-to-show", () => {

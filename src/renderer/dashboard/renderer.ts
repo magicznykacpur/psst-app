@@ -26,14 +26,15 @@ let user: User = null;
 
 const getUser = async () => {
   try {
-    const response = await fetch(`${window.api_url}/users/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-      },
-    });
-
-    const body = await response.json();
+    const body = await window.api.requestWithBody(
+      `${window.api_url}/users/me`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
 
     user = {
       id: body.id,
@@ -76,14 +77,16 @@ let currentMessages: Message[] | [] = [];
 
 const getUsersChats = async () => {
   try {
-    const response = await fetch(`${window.api_url}/chats`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-      },
-    });
+    const data: Chat[] = await window.api.requestWithBody(
+      `${window.api_url}/chats`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
 
-    const data: Chat[] = await response.json();
     usersChats = data;
     currentChat = data[0];
 
@@ -146,14 +149,13 @@ const initChatItemEventListener = (chatItem: HTMLDivElement, chat: Chat) => {
 };
 
 const getMessagesForChat = async (chatId: string) => {
-  const response = await fetch(`${window.api_url}/messages/${chatId}`, {
+  const data: Message[] = await window.api.requestWithBody(`${window.api_url}/messages/${chatId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${userToken}`,
     },
   });
 
-  const data: Message[] = await response.json();
   return data;
 };
 
@@ -162,12 +164,12 @@ const populateMessages = (messages: Message[]) => {
   messagesEl.innerHTML = "";
 
   if (messages.length === 0) {
-    const noMessages = document.createElement("div")
-    noMessages.classList.add("no-messages", "mt-5")
-    noMessages.innerText = "this chat has no messages yet"
+    const noMessages = document.createElement("div");
+    noMessages.classList.add("no-messages", "mt-5");
+    noMessages.innerText = "this chat has no messages yet";
 
-    messagesEl.appendChild(noMessages)
-    return
+    messagesEl.appendChild(noMessages);
+    return;
   }
 
   messages.forEach((message) => {
@@ -178,7 +180,7 @@ const populateMessages = (messages: Message[]) => {
     messageEl.innerText = message.body;
 
     messagesEl.appendChild(messageEl);
-    messagesEl.scrollTop = messagesEl.scrollHeight
+    messagesEl.scrollTop = messagesEl.scrollHeight;
   });
 };
 
@@ -190,7 +192,7 @@ const initMessageInputHandler = () => {
   messageInput.addEventListener("keypress", async (event) => {
     if (event.key === "Enter") {
       try {
-        await fetch(`${window.api_url}/messages`, {
+        await window.api.requestWithBody(`${window.api_url}/messages`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${userToken}`,

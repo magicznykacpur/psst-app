@@ -51,13 +51,12 @@ const signupButtonHandler = () => {
 
 const getJWTToken = async (email: string, password: string) => {
   try {
-    const response = await fetch(`${window.api_url}/login`, {
+    const data = await window.api.requestWithBody(`${window.api_url}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ "email": email, "password": password })
     })
 
-    const data = await response.json()
     return data.token
   } catch (error) {
     console.error(error)
