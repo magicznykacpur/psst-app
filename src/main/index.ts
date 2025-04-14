@@ -1,50 +1,62 @@
-import { electronApp, optimizer } from "@electron-toolkit/utils"
-import { config } from "dotenv"
-import { app, BrowserWindow, ipcMain, shell } from "electron"
-import { promises } from "fs"
-import { homedir } from "os"
-import { join } from "path"
+import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { config } from "dotenv";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { promises } from "fs";
+import { homedir } from "os";
+import { join } from "path";
 
-config()
+config();
 
 const loadUserToken = async (): Promise<string> => {
-  const configPath = `${homedir()}/.psst.config.json`
+  const configPath = `${homedir()}/.psst.config.json`;
 
-  const file = await promises.readFile(configPath, "utf-8")
+  const file = await promises.readFile(configPath, "utf-8");
 
-  return file.split(":")[1].replaceAll("}", "").replaceAll("\"", "")
-}
+  return file.split(":")[1].replaceAll("}", "").replaceAll('"', "");
+};
 
 const checkTokenValidity = async (tokenString): Promise<boolean> => {
-  const response = await fetch(`${process.env.API_URL}/validity`, {
-    method: "POST",
-    body: JSON.stringify({ "token": tokenString })
-  })
-
-  return response.status === 200
-}
+  try {
+    const response = await fetch(`${process.env.API_URL}/validity`, {
+      method: "POST",
+      body: JSON.stringify({ token: tokenString }),
+    });
+    return response.status === 200;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
 
 const saveUserToken = async (token: string): Promise<void> => {
-  const configPath = `${homedir()}/.psst.config.json`
-  const stringifiedConfig = JSON.stringify({ "token": token })
+  const configPath = `${homedir()}/.psst.config.json`;
+  const stringifiedConfig = JSON.stringify({ token: token });
 
   try {
-    await promises.writeFile(configPath, stringifiedConfig)
+    await promises.writeFile(configPath, stringifiedConfig);
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-}
+};
 
 const clearUserToken = async (): Promise<void> => {
-  const configPath = `${homedir()}/.psst.config.json`
-  const stringifiedConfig = JSON.stringify({ "token": "" })
+  const configPath = `${homedir()}/.psst.config.json`;
+  const stringifiedConfig = JSON.stringify({ token: "" });
 
   try {
-    await promises.writeFile(configPath, stringifiedConfig)
+    await promises.writeFile(configPath, stringifiedConfig);
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-}
+};
+
+const loadBasedOnEnv = (mainWindow: BrowserWindow, path: string) => {
+  if (!process.env["ELECTRON_RENDERER_URL"]) {
+    mainWindow.loadFile(join(__dirname, path));
+  } else {
+    mainWindow.loadURL(`${process.env["ELECTRON_RENDERER_URL"]}/${path}`);
+  }
+};
 
 const createWindow = (tokenValid: boolean) => {
   const mainWindow = new BrowserWindow({
@@ -53,72 +65,76 @@ const createWindow = (tokenValid: boolean) => {
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
-    }
-  })
+      preload: join(__dirname, "../preload/index.js"),
+      sandbox: false,
+    },
+  });
 
-  const outPath = "../../out/renderer"
-  const signupPath = `${outPath}/signup/index.html`
-  const loginPath = `${outPath}/login/index.html`
-  const dashboardPath = `${outPath}/dashboard/index.html`
+  const signupPath = "signup/index.html";
+  const loginPath = "login/index.html";
+  const dashboardPath = "dashboard/index.html";
 
   ipcMain.on("go-to-signup", () => {
-    mainWindow.loadFile(join(__dirname, signupPath))
-  })
+    loadBasedOnEnv(mainWindow, signupPath)
+  });
 
   ipcMain.on("go-to-login", () => {
-    mainWindow.loadFile(join(__dirname, loginPath))
-  })
+    loadBasedOnEnv(mainWindow, loginPath)
+  });
 
-  ipcMain.on("go-to-dashboard", (_, token) => {
-    mainWindow.loadFile(join(__dirname, dashboardPath), {query: {"user-token": token}})
-  })
+  ipcMain.on("go-to-dashboard", () => {
+    loadBasedOnEnv(mainWindow, dashboardPath)
+  });
 
   ipcMain.on("save-user-token", async (_, token) => {
-    await saveUserToken(token)
-  })
+    await saveUserToken(token);
+  });
 
   ipcMain.on("sign-out-user", async () => {
-    await clearUserToken()
-    mainWindow.loadFile(join(__dirname, loginPath))
-  })
+    await clearUserToken();
+    loadBasedOnEnv(mainWindow, loginPath)
+  });
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
+  ipcMain.on("request-with-body", async (_, url, options) => {
+    const response = await fetch(url, options);
+    const body = await response.json();
+
+    return body;
+  });
+
+  mainWindow.on("ready-to-show", () => {
+    mainWindow.showInactive();
+  });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
+    shell.openExternal(details.url);
+    return { action: "deny" };
+  });
 
-  const mainWindowScreen = tokenValid ? dashboardPath : loginPath
-  mainWindow.loadFile(join(__dirname, mainWindowScreen))
-}
+  const homePath = tokenValid ? dashboardPath : loginPath;
+  loadBasedOnEnv(mainWindow, homePath);
+};
 
 app.whenReady().then(async () => {
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId("com.electron");
 
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
+  app.on("browser-window-created", (_, window) => {
+    optimizer.watchWindowShortcuts(window);
+  });
 
-  const tokenString = await loadUserToken()
-  const tokenValidity = await checkTokenValidity(tokenString)
-  process.env.USER_TOKEN = tokenString
+  const tokenString = await loadUserToken();
+  const tokenValidity = await checkTokenValidity(tokenString);
+  process.env.USER_TOKEN = tokenString;
 
-  createWindow(tokenValidity)
+  createWindow(tokenValidity);
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow(tokenValidity)
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow(tokenValidity);
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
-
-  )
-})
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+});
