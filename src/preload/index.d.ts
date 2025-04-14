@@ -8,6 +8,7 @@ declare global {
       goToLogin: () => void,
       goToDashboard: (token: string) => void,
       saveUserToken: (token: string) => void,
+      requestWithBody: (path: string, options: RequestInit) => Promise<T>,
       signOutUser: () => void,
     },
     api_url: string,

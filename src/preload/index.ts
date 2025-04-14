@@ -7,7 +7,8 @@ type Api = {
   goToLogin: () => void,
   goToDashboard: (token: string) => void,
   saveUserToken: (token: string) => void,
-  signOutUser: () => void
+  signOutUser: () => void,
+  requestWithBody: (path: string, options: RequestInit) => Promise<any>
 }
 
 const api: Api = {
@@ -15,7 +16,8 @@ const api: Api = {
   goToLogin: () => ipcRenderer.send("go-to-login"),
   goToDashboard: (token: string) => ipcRenderer.send("go-to-dashboard", token),
   saveUserToken: (token: string) => ipcRenderer.send("save-user-token", token),
-  signOutUser: () => ipcRenderer.send("sign-out-user")
+  signOutUser: () => ipcRenderer.send("sign-out-user"),
+  requestWithBody: (path: string, options: RequestInit) => ipcRenderer.invoke("request-with-body", path, options)
 }
 
 if (process.contextIsolated) {
