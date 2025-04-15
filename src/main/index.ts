@@ -1,60 +1,29 @@
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { config } from "dotenv";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
-import { promises } from "fs";
-import { homedir } from "os";
+import { app, BrowserWindow, ipcMain, LoadURLOptions, shell } from "electron";
 import { join } from "path";
+import {
+  checkTokenValidity,
+  clearUserToken,
+  loadUserToken,
+  saveUserToken,
+  userToken,
+} from "./token";
 
 config();
 
-const loadUserToken = async (): Promise<string> => {
-  const configPath = `${homedir()}/.psst.config.json`;
-
-  const file = await promises.readFile(configPath, "utf-8");
-
-  return file.split(":")[1].replaceAll("}", "").replaceAll('"', "");
-};
-
-const checkTokenValidity = async (tokenString): Promise<boolean> => {
-  try {
-    const response = await fetch(`${process.env.API_URL}/validity`, {
-      method: "POST",
-      body: JSON.stringify({ token: tokenString }),
-    });
-    return response.status === 200;
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
-};
-
-const saveUserToken = async (token: string): Promise<void> => {
-  const configPath = `${homedir()}/.psst.config.json`;
-  const stringifiedConfig = JSON.stringify({ token: token });
-
-  try {
-    await promises.writeFile(configPath, stringifiedConfig);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const clearUserToken = async (): Promise<void> => {
-  const configPath = `${homedir()}/.psst.config.json`;
-  const stringifiedConfig = JSON.stringify({ token: "" });
-
-  try {
-    await promises.writeFile(configPath, stringifiedConfig);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const loadBasedOnEnv = (mainWindow: BrowserWindow, path: string) => {
+const loadBasedOnEnv = (
+  mainWindow: BrowserWindow,
+  path: string,
+  options?: LoadURLOptions
+) => {
   if (!process.env["ELECTRON_RENDERER_URL"]) {
     mainWindow.loadFile(join(__dirname, path));
   } else {
-    mainWindow.loadURL(`${process.env["ELECTRON_RENDERER_URL"]}/${path}`);
+    mainWindow.loadURL(
+      `${process.env["ELECTRON_RENDERER_URL"]}/${path}`,
+      options
+    );
   }
 };
 
@@ -74,16 +43,20 @@ const createWindow = (tokenValid: boolean) => {
   const loginPath = "login/index.html";
   const dashboardPath = "dashboard/index.html";
 
+  ipcMain.handle("get-token", () => {
+    return userToken;
+  });
+
   ipcMain.on("go-to-signup", () => {
-    loadBasedOnEnv(mainWindow, signupPath)
+    loadBasedOnEnv(mainWindow, signupPath);
   });
 
   ipcMain.on("go-to-login", () => {
-    loadBasedOnEnv(mainWindow, loginPath)
+    loadBasedOnEnv(mainWindow, loginPath);
   });
 
   ipcMain.on("go-to-dashboard", () => {
-    loadBasedOnEnv(mainWindow, dashboardPath)
+    loadBasedOnEnv(mainWindow, dashboardPath);
   });
 
   ipcMain.on("save-user-token", async (_, token) => {
@@ -92,21 +65,34 @@ const createWindow = (tokenValid: boolean) => {
 
   ipcMain.on("sign-out-user", async () => {
     await clearUserToken();
-    loadBasedOnEnv(mainWindow, loginPath)
+    loadBasedOnEnv(mainWindow, loginPath);
   });
 
-  ipcMain.handle("request-with-body", async (_, url: string, options: RequestInit) => {
-    try {
-      const response = await fetch(url, options);
-      
-      if (!["POST", "PUT", "DELETE"].includes(options.method ?? "") ) {
+  ipcMain.handle(
+    "request-with-body",
+    async (_, url: string, options: RequestInit): Promise<any | void> => {
+      try {
+        const response = await fetch(url, options);
         const body = await response.json();
-        return body
+        return body;
+      } catch (e) {
+        console.error((e as Error).message);
       }
-    } catch (e) {
-      console.error(e)
     }
-  });
+  );
+
+  ipcMain.handle(
+    "request",
+    async (_, url: string, options: RequestInit): Promise<number | void> => {
+      try {
+        const response = await fetch(url, options);
+
+        return response.status;
+      } catch (e) {
+        console.error((e as Error).message);
+      }
+    }
+  );
 
   mainWindow.on("ready-to-show", () => {
     mainWindow.showInactive();
