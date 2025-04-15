@@ -4,6 +4,7 @@ import { ipcRenderer } from "electron/renderer";
 import { Api } from "./types";
 
 const api: Api = {
+  getUserToken: () => ipcRenderer.invoke("get-user-token"),
   goToSignup: () => ipcRenderer.send("go-to-signup"),
   goToLogin: () => ipcRenderer.send("go-to-login"),
   goToDashboard: (token: string) => ipcRenderer.send("go-to-dashboard", token),
@@ -20,7 +21,9 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("api_url", process.env["API_URL"]);
-    contextBridge.exposeInMainWorld("user_token", process.env["USER_TOKEN"]);
+    contextBridge.exposeInMainWorld("user", {
+      token: process.env["USER_TOKEN"],
+    });
   } catch (error) {
     console.error(error);
   }
@@ -32,5 +35,5 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api_url = process.env["API_URL"];
   // @ts-ignore (define in dts)
-  window.user_token = process.env["USER_TOKEN"];
+  window.user = { token: process.env["USER_TOKEN"] };
 }

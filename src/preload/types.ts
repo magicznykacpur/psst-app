@@ -1,4 +1,5 @@
 export type Api = {
+  getUserToken: () => Promise<string>;
   goToSignup: () => void;
   goToLogin: () => void;
   goToDashboard: (token: string) => void;
