@@ -43,7 +43,7 @@ const createWindow = (tokenValid: boolean) => {
   const loginPath = "login/index.html";
   const dashboardPath = "dashboard/index.html";
 
-  ipcMain.handle("get-token", () => {
+  ipcMain.handle("get-user-token", () => {
     return userToken;
   });
 

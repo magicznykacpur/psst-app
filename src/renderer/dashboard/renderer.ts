@@ -2,6 +2,7 @@ import { Toast } from "bootstrap";
 
 const initDashboardRenderer = () => {
   window.addEventListener("DOMContentLoaded", async () => {
+    await getUserToken();
     await getUser();
     await getUsersChats();
     initHeaderDropdownListener();
@@ -10,10 +11,10 @@ const initDashboardRenderer = () => {
   });
 };
 
-const paramToken = new URLSearchParams(window.location.search).get(
-  "user-token"
-);
-const userToken = paramToken === null ? window.user_token : paramToken;
+let userToken: string | undefined = undefined;
+const getUserToken = async () => {
+  userToken = await window.api.getUserToken();
+};
 
 type User = {
   id: string;
@@ -26,23 +27,12 @@ let user: User = null;
 
 const getUser = async () => {
   try {
-    const body = await window.api.requestWithBody(
-      `${window.api_url}/users/me`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
-    );
-
-    user = {
-      id: body.id,
-      createdAt: body.created_at,
-      updatedAt: body.updated_at,
-      username: body.username,
-      email: body.email,
-    };
+    user = await window.api.requestWithBody(`${window.api_url}/users/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
 
     setUserLoaderHidden();
     setUsername();
@@ -149,12 +139,15 @@ const initChatItemEventListener = (chatItem: HTMLDivElement, chat: Chat) => {
 };
 
 const getMessagesForChat = async (chatId: string) => {
-  const data: Message[] = await window.api.requestWithBody(`${window.api_url}/messages/${chatId}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${userToken}`,
-    },
-  });
+  const data: Message[] = await window.api.requestWithBody(
+    `${window.api_url}/messages/${chatId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    }
+  );
 
   return data;
 };

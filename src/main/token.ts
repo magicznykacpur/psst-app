@@ -48,6 +48,7 @@ export const saveUserToken = async (token: string): Promise<void> => {
 
   try {
     await promises.writeFile(configPath, stringifiedConfig);
+    userToken = token;
   } catch (e) {
     logError(e);
   }
@@ -59,6 +60,7 @@ export const clearUserToken = async (): Promise<void> => {
 
   try {
     await promises.writeFile(configPath, stringifiedConfig);
+    userToken = undefined;
   } catch (e) {
     logError(e);
   }
