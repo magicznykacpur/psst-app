@@ -1,16 +1,10 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
+import { Api } from './types'
 
 declare global {
   interface Window {
     electron: ElectronAPI
-    api: {
-      goToSignup: () => void,
-      goToLogin: () => void,
-      goToDashboard: (token: string) => void,
-      saveUserToken: (token: string) => void,
-      requestWithBody: (path: string, options: RequestInit) => Promise<T>,
-      signOutUser: () => void,
-    },
+    api: Api,
     api_url: string,
     user_token: string
   }
